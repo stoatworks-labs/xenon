@@ -23,6 +23,44 @@ a triangular polygon, and two slices seen through input masks (a triangle and a 
 Pattern All, Look Outline, 35% room light,
 on the frame that catches a beat at 120 BPM.</sub>
 
+<!-- downloads:start -->
+
+## Download
+
+**[v0.1.0](https://github.com/stoatworks-labs/xenon/releases/tag/v0.1.0)** — prebuilt for macOS and Windows. Pick your platform:
+
+<details>
+<summary><b>macOS</b> — Universal (Apple Silicon + Intel)</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| Universal (Apple Silicon + Intel) · .dmg disk image | [`xenon-0.1.0-macos-universal.dmg`](https://github.com/stoatworks-labs/xenon/releases/download/v0.1.0/xenon-0.1.0-macos-universal.dmg) | 291 KB |
+| Universal (Apple Silicon + Intel) · .zip archive | [`xenon-macos-universal.zip`](https://github.com/stoatworks-labs/xenon/releases/latest/download/xenon-macos-universal.zip) | 251 KB |
+
+</details>
+
+<details>
+<summary><b>Windows</b> — x64</summary>
+
+| Build | Download | Size |
+| --- | --- | --- |
+| x64 · .exe installer | [`xenon-0.1.0-windows-x86_64-setup.exe`](https://github.com/stoatworks-labs/xenon/releases/download/v0.1.0/xenon-0.1.0-windows-x86_64-setup.exe) | 278 KB |
+| x64 · .zip archive | [`xenon-windows-x86_64.zip`](https://github.com/stoatworks-labs/xenon/releases/latest/download/xenon-windows-x86_64.zip) | 157 KB |
+
+</details>
+
+All builds, checksums and release notes: [github.com/stoatworks-labs/xenon/releases](https://github.com/stoatworks-labs/xenon/releases).
+
+macOS builds are signed and notarised and open normally. The Windows builds are unsigned, so SmartScreen warns once.
+
+<!-- downloads:end -->
+
+## Video
+
+> **Photosensitivity warning:** the video shows a strobe and contains flashing lights.
+
+[![Xenon: every Advanced Output slice a strobe head, fired by a chase, for Resolume](docs/video-thumb.png)](https://www.youtube.com/watch?v=eBeoLaYIXME)
+
 ## The one idea
 
 **Nothing here is animated. Each slice is a strobe head with a capacitor bank behind it,
