@@ -87,7 +87,7 @@ preset you choose.
 
 ## Status
 
-Version 0.1.0, 2026-11-09. Local only: no repository, release or website entry yet.
+Version 0.1.0, 2026-11-09. Public on GitHub since 2026-11-16; no release yet.
 
 **Measured offline**, on an M4 Max and Apple's software renderer, by `xntest` (every picture
 check at 1280x720 and 320x180):
@@ -112,8 +112,8 @@ check at 1280x720 and 320x180):
 
 **Not established:**
 
-- Windows: the code is written (the Documents folder, wide-character file access) and
-  has never been compiled.
+- Windows: the code (the Documents folder, wide-character file access) compiles clean
+  with MSVC; it has not yet run in Resolume on Windows.
 - Avenue: its folder is Arena's with the name changed; never seen.
 - Presets saved by Arena versions other than 7.27.1 and 7.28.1.
 - Screen-level output masks and DMX fixtures are ignored in this version.

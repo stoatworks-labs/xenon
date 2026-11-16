@@ -78,12 +78,15 @@ The design is `~/Projects/resolume/specs/SPEC-xenon.md`.
 - The macOS build must be universal. Check with `lipo`, never the build log.
 - `source/StoatworksAbout.h` and `ATTRIBUTIONS.md` are provisional hand copies
   (no guide button) until the project is registered with stoatworks-backend.
-- Local only: no GitHub repository, no tag, no website entry. The workflows in
-  `.github/` assume the public `stoatworks-labs/xenon` they are written for; landing
-  it in the fleet is the owner's call.
+- Public at https://github.com/stoatworks-labs/xenon since 2026-11-16. `ci.yml`
+  builds macOS (offline checks, glslc) and Windows on every push; `release.yml`
+  builds both platforms, checks the DLL as a host sees it (`tools/wincheck.ps1`,
+  whose `-Params` changes whenever a control or the About block does) and
+  publishes on a `v*` tag. Its macOS job is unsigned: this Mac's autosign agent
+  signs and notarises the published assets.
 
 ## Not done yet
-- Never built on Windows. No OpenFX port, no presets, no user guide, no browser demo.
+- No OpenFX port, no presets, no user guide, no browser demo.
 - See README's Status for what Arena on this Mac has and hasn't shown.
 
 ## Diagnostics

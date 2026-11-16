@@ -153,7 +153,8 @@ Assumed, not verified:
 - **Which side of an Input Mask Arena shows.** The editor shades the inside for Invert 1;
   the plugin follows that. Step 5's result is under "In Arena".
 - **Windows.** The Documents folder through `SHGetKnownFolderPath`, `_wfopen` and
-  `_wstat64` are written and never compiled.
+  `_wstat64`: MSVC compiled them clean, with no warnings, on ci.yml's first run
+  (2026-11-16). Running them is under "In Arena".
 - **Avenue** writes the same files under `Resolume Avenue`. Not seen; the path is
   Arena's with the product name changed.
 - **A preset Arena wrote in another version.** The fixtures are 7.27.1 and 7.28.1 saves.
@@ -248,9 +249,7 @@ Recorded in SPEC-xenon.md and README's Status.
 
 ## Not done
 
-- No GitHub repository, tag, release or website entry: landing it in the fleet is
-  the owner's call. The workflows in `.github/` assume a public `stoatworks-labs/xenon`.
-- Never built on Windows. No OpenFX port, no presets, no user guide.
+- No OpenFX port, no presets.
 - No reply to the viewer who asked for it.
 
 ## Open design questions

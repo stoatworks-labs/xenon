@@ -1,17 +1,15 @@
 name: release
 
-# Build the Xenon FFGL plugin for the two platforms Resolume runs on:
+# Build the Xenon FFGL effect for the two platforms Resolume runs on:
 #   - macOS   -> universal (arm64 + x86_64) Xenon.bundle
 #   - Windows -> x64 Xenon.dll (GLEW static-linked via vcpkg)
-# Each ships as a zip; drop the bundle/dll into Resolume's "Extra Effects"
-# folder. Trigger manually (Actions > release > Run workflow) or by pushing a
-# v* tag.
+# Each ships as a zip, with a .dmg for macOS and an installer for Windows.
+# Trigger manually (Actions > release > Run workflow) or by pushing a v* tag.
 #
-# Dispatching this manually is the cheap way to test an FFGL build without
+# Dispatching this manually is the cheap way to get a Windows build without
 # publishing anything: the release job below is gated on refs/tags/v*, so a
 # workflow_dispatch run builds both platforms and skips publication. That is
-# also the only thing standing between "the code uses nothing platform-specific"
-# and actually knowing Windows compiles.
+# how the DLL tested in Arena on win-lab is the one a tag then ships.
 on:
   workflow_dispatch:
   push:
@@ -29,39 +27,51 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macos-14 and never macos-13: the Intel macOS runners are retired,
-          # so x86_64 is cross-compiled from Apple Silicon rather than built
-          # natively. CMAKE_OSX_ARCHITECTURES in CMakeLists.txt does that on
-          # its own; there is nothing to set here.
-          - { name: macos-universal, os: macos-14,       artifact: Xenon.bundle }
-          - { name: windows-x86_64,  os: windows-latest, artifact: Xenon.dll }
+          # macos-15 and never macos-13: the Intel macOS runners are retired,
+          # so x86_64 is cross-compiled from Apple Silicon. CMakeLists.txt's
+          # CMAKE_OSX_ARCHITECTURES does that on its own.
+          - { name: macos-universal, os: macos-15 }
+          - { name: windows-x86_64,  os: windows-latest }
     steps:
       - uses: actions/checkout@v7
         with:
           submodules: recursive
 
-      # --- macOS: no extra deps, universal build straight from CMake ---
       # Tools off: xntest links against zlib and CGL and is a developer
-      # harness, not something that ships. The checks it runs happen locally
-      # via tools/verify.sh.
+      # harness, not something that ships. Its checks run locally via
+      # tools/verify.sh, and the GL-free ones in ci.yml.
       - name: Configure (macOS)
         if: runner.os == 'macOS'
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DXENON_BUILD_TOOLS=OFF
 
-      # --- Windows: GLEW comes from vcpkg, static-linked (static-md keeps the
-      #     CRT dynamic so the plugin matches the host) so the .dll has no
-      #     external glew32.dll runtime dependency. ---
+      # GLEW comes from vcpkg, static-linked (static-md keeps the CRT dynamic
+      # so the plugin matches the host) so the .dll has no external
+      # glew32.dll runtime dependency.
+      #
+      # Applocal off: with a static triplet there is no DLL for vcpkg to copy,
+      # and isohypse's two plugins once raced each other's copy step to an
+      # exit 32. One plugin cannot race, but the step has nothing to do.
       - name: Configure (Windows)
         if: runner.os == 'Windows'
         run: >
           cmake -B build -A x64
           -DCMAKE_BUILD_TYPE=Release
           -DXENON_BUILD_TOOLS=OFF
+          -DVCPKG_APPLOCAL_DEPS=OFF
           -DVCPKG_TARGET_TRIPLET=x64-windows-static-md
           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         run: cmake --build build --config Release --parallel
+
+      # The shipped DLL, loaded as a host loads it: see tools/wincheck.ps1.
+      # -Params is the control table plus the About block (its text and four
+      # buttons); it changes whenever either does.
+      - name: Check the DLL (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          ./tools/wincheck.ps1 -Dll "build/Release/Xenon.dll" -Name "SW Xenon" -Id XN01 -Kind effect -Params 25
+          if( $LASTEXITCODE ) { exit $LASTEXITCODE }
 
       - name: Derive version
         id: ver
@@ -88,24 +98,24 @@ jobs:
             # FAILS when grep FINDS its match: grep exits at once, the writer takes
             # SIGPIPE, and pipefail reports the pipeline as failed. Captured and
             # matched with `case` instead.
-            __archs=$( lipo -archs "out/Xenon.bundle/Contents/MacOS/Xenon" )
+            bin="out/Xenon.bundle/Contents/MacOS/Xenon"
+            __archs=$( lipo -archs "$bin" )
             echo "architectures: $__archs"
             case "$__archs" in
-              *x86_64*) ;;
-              *) echo "expected x86_64, got: $__archs"; exit 1 ;;
+              *x86_64*arm64* | *arm64*x86_64*) ;;
+              *) echo "expected x86_64 and arm64, got: $__archs"; exit 1 ;;
             esac
-            case "$__archs" in
-              *arm64*) ;;
-              *) echo "expected arm64, got: $__archs"; exit 1 ;;
-            esac
-            __symbols=$( nm -gU "out/Xenon.bundle/Contents/MacOS/Xenon" )
+            __symbols=$( nm -gU "$bin" )
             case "$__symbols" in
               *_plugMain*) ;;
-              *) echo "expected _plugMain, got: $__symbols"; exit 1 ;;
+              *) echo "expected _plugMain"; exit 1 ;;
             esac
           else
             cp "build/Release/Xenon.dll" "out/Xenon.dll"
           fi
+          # GLEW and the FFGL SDK are BSD-licensed and built into the binary,
+          # so their notices travel with it.
+          cp ATTRIBUTIONS.md out/
           ls -R out
 
       - name: Archive (zip)
@@ -148,9 +158,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # makensis cross-compiles, so the installer is wrapped here from the zip the
-    # Windows job uploaded. Its directory page defaults to the common FFGL
-    # folder but stays editable, because Resolume reads plugins from a path the
-    # user chooses per edition.
+    # Windows job uploaded. --ffgl points its directory page at
+    # Documents\Resolume Arena\Extra Effects, the folder Resolume reads, and
+    # leaves it editable for Avenue's.
     steps:
       - uses: actions/checkout@v7
 
@@ -174,9 +184,10 @@ jobs:
           rm -rf "$stage"; mkdir -p "$stage"
           unzip -q "$zip" -d "$stage"
           cp README.md "$stage/" 2>/dev/null || true
-          # --plain: a plugin needs neither a shortcut nor a PATH entry. It was
-          # --cli until nib#2, where the unguarded PATH write wiped a system PATH.
-          rl_nsis windows-x86_64 "$stage" --plain
+          # --ffgl: per user, into Documents\Resolume Arena\Extra Effects
+          # (Avenue's where only Avenue is installed), with no shortcut and no
+          # PATH entry.
+          rl_nsis windows-x86_64 "$stage" --ffgl
           ls -l installers
 
       - uses: actions/upload-artifact@v7
