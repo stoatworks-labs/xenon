@@ -87,7 +87,7 @@ preset you choose.
 
 ## Status
 
-Version 0.1.0, 2026-11-09. Public on GitHub since 2026-11-16; no release yet.
+Version 0.1.0, released 2026-11-16.
 
 **Measured offline**, on an M4 Max and Apple's software renderer, by `xntest` (every picture
 check at 1280x720 and 320x180):
@@ -108,12 +108,27 @@ check at 1280x720 and 320x180):
   live;
 - GPU cost: 0.65 ms a frame at 4K with unmaptest's four heads, 0.90 ms with 256.
 
-**In Arena** (7.28.1, macOS): not yet loaded.
+**In Arena on macOS** (7.29.0, M4 Max, 2026-11-16, a local build): it loads and registers
+as SW Xenon, reads the preset Arena has active (`unmaptest`: five heads, 86 edges) and
+draws in the composition: with Look Outline, Pattern All and Room Light 35%, the
+composition monitor showed the five slices' outlines over the clip, across the whole
+composition rather than only the clip's rectangle.
+
+**In Arena on Windows** (7.27.1 on Mesa llvmpipe, software rendering, 2026-11-16): the
+release's own Windows build loads and registers; all 26 controls (Xenon's 25 and Arena's
+Opacity) match their declared names, order, types, ranges and defaults; it reads a preset
+through Preset File; Arena's log stays clean. A screen capture of Arena's Composition
+Monitor showed that preset's five heads lit (Look Fill, Pattern All) over a test card.
+Arena's clip thumbnail, which the fleet's automated gate reads, never shows Xenon's light,
+most likely because the light is what a head gave off since the last render and the
+thumbnail is a render of its own; so the gate measured only Opacity and Room Light control
+by control (both change the picture) and records the other 16 as out of its reach. The
+harness measures those.
 
 **Not established:**
 
-- Windows: the code (the Documents folder, wide-character file access) compiles clean
-  with MSVC; it has not yet run in Resolume on Windows.
+- Windows on a GPU: only software rendering has been seen.
+- Onset in Resolume: no sound reached Xenon in either Arena.
 - Avenue: its folder is Arena's with the name changed; never seen.
 - Presets saved by Arena versions other than 7.27.1 and 7.28.1.
 - Screen-level output masks and DMX fixtures are ignored in this version.

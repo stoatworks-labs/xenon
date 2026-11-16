@@ -243,9 +243,23 @@ alive bare: on unmaptest's four heads a slow Recharge leaves a bank short after 
   independent models, the negative controls, the bench).
 - `tools/slicedump`: prints what the reader finds in a preset (`--active` for this Mac's).
 
-## In Arena (2026-11-09, Arena 7.28.1, this Mac)
+## In Arena (2026-11-16: 7.29.0 on this Mac, 7.27.1 on win-lab)
 
-Recorded in SPEC-xenon.md and README's Status.
+Recorded in README's Status. Two things a later session needs:
+
+- **The fleet's Arena gate cannot see the light.** plugin-bench's arenaprobe grabs
+  Arena's clip thumbnail, and that thumbnail never shows Xenon's light: at the defaults
+  it is 0 pixels from the bare input, and Fire, Pattern All on Eighth Beat, Recharge 0
+  and Decay 1 with the clip disconnected left it at Room Light alone. The light is an
+  exposure (what a head gave off since the last render, `dt = now - lastNow`), and the
+  thumbnail is most likely a render at a time the instance has already rendered, so it
+  catches none. A screen capture of win-lab's Composition Monitor (a scheduled task
+  running as the logged-on user) showed the heads lit. So `arena/expect/xenon.json`
+  marks the 16 light-only controls `inert` with that reason and measures Opacity
+  (under Room Light 0) and Room Light: 10 passed, 0 failed on 0.1.0.
+- **Arena hands the effect a composition-sized frame.** The clip's Transform comes first
+  in its chain, so on this Mac a 1280x720 clip in a 1920x1080 composition got outlines
+  across the whole composition, where the slices are, not only over the clip.
 
 ## The browser demo (2026-11-16)
 
