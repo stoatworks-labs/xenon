@@ -85,8 +85,22 @@ The design is `~/Projects/resolume/specs/SPEC-xenon.md`.
   publishes on a `v*` tag. Its macOS job is unsigned: this Mac's autosign agent
   signs and notarises the published assets.
 
+## Browser demo
+- `demo/` is served at https://xenon-demo.stoatworks-labs.com/ by the Worker in
+  `wrangler.toml` (a route, plus a proxied AAAA `100::` record for `xenon-demo`: delete the
+  record and the page goes dark while deploys stay green). `.github/workflows/deploy.yml`
+  redeploys it on every push to main; by hand: `cf-run npx wrangler deploy`.
+- `demo/shaders.js` and `demo/presets/` are copies. After changing a shader or a fixture
+  preset, run `python3 demo/tools/check_shaders.py --write` (shaders) or copy the preset,
+  then `python3 demo/tools/check_shaders.py`; `tools/verify.sh` fails on any drift.
+- `demo/port.js` is a hand port of Controls, Rig, SliceMap's reader and Xenon.cpp's CPU
+  half, and nothing checks it but a reader: change it by hand with the C++.
+- `demo/vendor/` is the shared kit (`stoatworks-backend/resolume-demo`); never edit it.
+- The page draws nothing until the visitor presses Start under its photosensitivity
+  warning. Keep it that way, and keep its presets under three flashes a second a head.
+
 ## Not done yet
-- No OpenFX port, no presets, no user guide, no browser demo.
+- No OpenFX port, no presets, no user guide.
 - See README's Status for what Arena on this Mac has and hasn't shown.
 
 ## Diagnostics

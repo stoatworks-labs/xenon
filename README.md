@@ -118,6 +118,16 @@ check at 1280x720 and 320x180):
 - Presets saved by Arena versions other than 7.27.1 and 7.28.1.
 - Screen-level output masks and DMX fixtures are ignored in this version.
 
+## Browser demo
+
+[xenon-demo.stoatworks-labs.com](https://xenon-demo.stoatworks-labs.com/) runs the plugin's
+own GLSL in WebGL2, unedited, fed by a JavaScript port of its CPU half (the preset reader,
+the chase, the banks and the exposure) that only a reader checks, on the repository's own
+Advanced Output presets, a preset file you pick, or the grid. It opens on a
+photosensitivity warning and draws nothing until you press Start. No audio reaches it, so
+Onset steps only on Fire. It is a demo, not the plugin, and the page lists what it leaves
+out.
+
 ## Build
 
     git submodule update --init

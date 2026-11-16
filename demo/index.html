@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Xenon — browser demo | Stoatworks Labs</title>
+    <meta name="description" content="Try the Xenon FFGL effect for Resolume in your browser: every slice of an Advanced Output preset a xenon strobe head, fired by a lighting desk's chase, each with a capacitor bank behind it that a fast chase drains. The plugin's own GLSL, ported to WebGL2 unedited, on the repository's own Advanced Output presets, fed by a JavaScript port of its CPU half that only a reader checks. It flashes once you start it. A demo, not the plugin." />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./vendor/kit.css" />
+    <link rel="stylesheet" href="./xenon.css" />
+    <link rel="canonical" href="https://xenon-demo.stoatworks-labs.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Stoatworks Labs" />
+    <meta property="og:title" content="Xenon — browser demo | Stoatworks Labs" />
+    <meta property="og:description" content="Try the Xenon FFGL effect for Resolume in your browser: every slice of an Advanced Output preset a xenon strobe head, fired by a lighting desk's chase, each with a capacitor bank behind it that a fast chase drains. The plugin's own GLSL, ported to WebGL2 unedited, on the repository's own Advanced Output presets, fed by a JavaScript port of its CPU half that only a reader checks. It flashes once you start it. A demo, not the plugin." />
+    <meta property="og:url" content="https://xenon-demo.stoatworks-labs.com/" />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <section class="xn-warning" id="photosensitivity" aria-labelledby="xn-warning-title">
+      <h2 class="xn-warning__title" id="xn-warning-title">Photosensitivity warning</h2>
+      <p>
+        <strong>This page is a strobe.</strong> Once you press Start it flashes, and flashing
+        light can trigger seizures in people with photosensitive epilepsy. If you, or anyone
+        who can see your screen, may be affected, do not start it.
+      </p>
+      <p>
+        Nothing moves or flashes until you press Start. It starts on the plugin's own
+        settings: one slice at a time, white, two steps a second at 120 BPM, which is under
+        the three flashes a second that broadcast and web guidance (Ofcom's, and WCAG's) puts
+        as the limit for a large flash. Some controls go much faster. The line under the
+        picture says how often the busiest slice is flashing, and warns past three a second.
+        <strong>Pause</strong>, under the picture, stops it at once.
+      </p>
+      <button type="button" class="btn xn-warning__start" id="xn-start" hidden>I have read this. Start the strobe</button>
+      <p class="xn-warning__note" id="xn-start-note" role="status"></p>
+    </section>
+
+    <main id="demo">
+      <noscript>
+        <h1>Xenon</h1>
+        <p>
+          Every slice in your Advanced Output is a xenon strobe head, and a lighting desk's
+          chase fires them: an FFGL effect for Resolume Arena and Avenue. Each slice is a
+          strobe head with a capacitor bank behind it, charged through a resistor between its
+          flashes, so a head that fired a moment ago has less to give. Nothing is animated: a
+          fast chase gets dimmer because the heads can't recharge in time, a Bounce lights its
+          inner heads weak and strong in turn, and Gate turns the clip into flashes of itself,
+          slice by slice.
+        </p>
+        <p>
+          This demo runs the plugin's shaders and a port of its CPU half in your browser, so
+          it needs JavaScript and WebGL2. The plugin itself, its source and its downloads are
+          on <a href="https://github.com/stoatworks-labs/xenon">its repository</a>.
+        </p>
+        <ul>
+          <li><a href="https://stoatworks-labs.com/software/xenon/">Project page and downloads</a></li>
+          <li><a href="https://stoatworks-labs.com/software/xenon/guide/">User guide</a></li>
+          <li><a href="https://github.com/stoatworks-labs/xenon">Source on GitHub</a></li>
+        </ul>
+      </noscript>
+    </main>
+
+    <script type="module" src="./plugin.js"></script>
+    <script
+      src="./vendor/support-footer.js"
+      defer
+      data-app="Xenon"
+      data-repo="https://github.com/stoatworks-labs/xenon"
+      data-note="A browser demo of the plugin's shaders over a port of its CPU half. Nothing you load here leaves your machine."
+    ></script>
+  </body>
+</html>

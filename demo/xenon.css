@@ -1,0 +1,104 @@
+/*
+ * Xenon's own additions to the kit's page: the photosensitivity warning at the
+ * top, the host row under the transport, the Preset File picker and the line
+ * under the picture. Everything else is vendor/kit.css, unedited.
+ */
+
+.xn-warning {
+  /* #demo is 1400px wide with a 20px gutter: line up with what is inside it. */
+  max-width: 1360px;
+  margin: 24px auto 0;
+  padding: 16px 18px;
+  background: #1f1a0c;
+  border: 1px solid #5a4613;
+  border-left: 4px solid var(--warn);
+  border-radius: 8px;
+  color: #f3e9cf;
+}
+
+@media (max-width: 1400px) {
+  .xn-warning { margin-left: 20px; margin-right: 20px; }
+}
+@media (max-width: 480px) {
+  .xn-warning { padding: 14px; }
+}
+
+.xn-warning__title {
+  font-size: 18px;
+  color: var(--warn);
+  margin-bottom: 6px;
+}
+
+.xn-warning p { margin: 8px 0 0; max-width: 80ch; font-size: 14px; }
+
+.xn-warning__start {
+  margin-top: 14px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 650;
+  border-color: var(--warn);
+}
+.xn-warning__start:disabled { opacity: 0.6; cursor: progress; }
+
+.xn-warning__note:empty { display: none; }
+.xn-warning__note { color: #d9cfb4; }
+
+/* Started: the warning stays, smaller, so a visitor who scrolls back sees it. */
+.xn-warning.is-started { padding: 10px 14px; }
+.xn-warning.is-started p { font-size: 13px; }
+
+/* ---- the host row --------------------------------------------------------- */
+
+.xn-host {
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+
+.xn-host__tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.xn-host .transport__field { flex-wrap: wrap; }
+.xn-host__map { max-width: 100%; }
+@media (max-width: 640px) {
+  .xn-host .transport__field { width: 100%; }
+  .xn-host__map { width: 100%; }
+}
+
+/* ---- Preset File ---------------------------------------------------------- */
+
+.prow__text[hidden] { display: none; }
+
+.xn-file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.xn-file .btn { padding: 4px 9px; font-size: 12px; flex: 0 0 auto; }
+.xn-file__choose { cursor: pointer; }
+
+.xn-file__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---- the line under the picture ------------------------------------------ */
+
+.xn-status { overflow-wrap: anywhere; }
+
+.xn-caution {
+  border-color: #5a4613;
+  background: #1f1a0c;
+  color: #f3e9cf;
+}

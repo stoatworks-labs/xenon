@@ -247,6 +247,51 @@ alive bare: on unmaptest's four heads a slow Recharge leaves a bank short after 
 
 Recorded in SPEC-xenon.md and README's Status.
 
+## The browser demo (2026-11-16)
+
+https://xenon-demo.stoatworks-labs.com/, from `demo/`, deployed by `wrangler.toml` (a
+Worker route: the zone is at Cloudflare's 100 custom domains, so `xenon-demo` is a proxied
+AAAA `100::` record made through the API) and `.github/workflows/deploy.yml` on every push
+to main.
+
+- **The GPU half is the plugin's.** `demo/shaders.js` is spliced from `Shaders.cpp` by
+  `demo/tools/check_shaders.py --write`; the same script (run by `tools/verify.sh`) fails
+  if a character drifts, if `Assemble()` or InitGL join the pieces differently, if
+  `render.js` stops joining them the same way, or if a preset in `demo/presets/` stops
+  being byte-identical to its fixture in `tests/presets/`. WebGL2 needs
+  EXT_color_buffer_float and EXT_float_blend for the R32F light buffer; without either the
+  page stops and says so.
+- **The CPU half is a port, and only a reader checks it.** `demo/port.js`: Controls.cpp
+  whole, Rig.cpp whole (less the hooks), SliceMap.cpp's reader, grid, order and SameHeads
+  (not the file side: Documents, the pointer, stat), and Xenon.cpp's CPU half (clock with
+  declared seconds, the beat, the frame, geometry, quads, colour). It was compared once
+  with the C++ when written: a scratch printer linking Controls.cpp, Rig.cpp and
+  SliceMap.cpp against the same printout from port.js, over every control row and
+  conversion, HashInt and HeadsForStep, the five fixture presets (whole, cut in half, and
+  with a BOM), the grid, three orders, and nine 900-frame rig runs with a jittery clock, a
+  stall, a restart and Fire presses. 8618 lines: every count, index, name and error
+  message the same, every float the GPU is handed (the exposures) equal, and every
+  double within 3e-13 relative (clang fuses multiply-adds, and V8's exp and pow are not
+  Apple's). That comparison is not in the repository and nothing repeats it.
+- **What the page stands in for**: Arena's saved Advanced Output is a choice among the
+  fixture presets (or none, which is the plugin's grid fallback); Preset File is a file
+  picker read in the page; Resolume's BPM and bar phase are a tempo menu and the page's
+  clock; the composition takes a non-16:9 map's shape. No audio: Audio is not on the
+  panel, Onset steps only on Fire, Threshold does nothing. Seed is 0–99 of 0–9999. Every
+  gap is listed on the page.
+- **Photosensitivity**: a warning at the top of the page, and nothing is mounted until
+  Start. The panel's defaults are the plugin's (one slice a beat, white). The page's
+  presets keep every head at or under two flashes a second at 120 BPM on its maps (the
+  guide's "strobe that dies away", sixteen a second, is left out); the line under the
+  picture gives the busiest head's rate and a caution past three a second.
+- **Traps**: headless Chrome has no WebGL2 without SwiftShader (`SHOT_GL=1` for
+  cdpshot), which does have EXT_float_blend. At the default 2 ms Decay a flash lands in
+  one frame, so a screenshot of a running page almost never catches one: pause, press
+  Fire, then Step (the press fires at the start of a frame that, paused, has no length,
+  and the Step's frame catches the whole flash). The kit's Composition select sets
+  `undefined` for an id it does not know, so the page's map-shaped entry has a listener
+  of its own that puts its size back.
+
 ## Not done
 
 - No OpenFX port, no presets.
