@@ -150,8 +150,11 @@ prints the heads Xenon would find in the preset Arena has active.
 
 ## Thanks
 
-To @CariTauGan, who asked for a strobe that fires slice by slice. See
-[ATTRIBUTIONS.md](ATTRIBUTIONS.md) for the work this is built on.
+To @CariTauGan, who asked for a strobe that fires slice by slice.
+
+<!-- attributions:start -->
+This project is built on other people's work — see [ATTRIBUTIONS.md](ATTRIBUTIONS.md).
+<!-- attributions:end -->
 
 ## Licence
 
